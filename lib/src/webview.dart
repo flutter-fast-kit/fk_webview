@@ -20,7 +20,14 @@ class FKWebView extends StatefulWidget {
 
   final FKWebViewConfig config;
 
-  const FKWebView({this.initialUrl, this.initialData, this.initialFile, this.config});
+  final void Function(InAppWebViewController controller) onWebViewCreated;
+
+  const FKWebView(
+      {this.initialUrl,
+      this.initialData,
+      this.initialFile,
+      this.onWebViewCreated,
+      this.config = const FKWebViewConfig()});
 
   @override
   _FKWebViewState createState() => new _FKWebViewState();
@@ -58,6 +65,8 @@ class _FKWebViewState extends State<FKWebView>
   /// onError
   ValueNotifier<FKWebViewError> _onWebViewError = ValueNotifier<FKWebViewError>(null);
 
+  bool _autoTitle = true;
+
   @override
   void initState() {
     super.initState();
@@ -77,6 +86,10 @@ class _FKWebViewState extends State<FKWebView>
 
     if (_fkWebViewConfig.showNavBarItem != _showNavBarItem.value) {
       _showNavBarItem.value = _fkWebViewConfig.showNavBarItem;
+    }
+
+    if (_fkWebViewConfig.autoTitle != _autoTitle) {
+      _autoTitle = _fkWebViewConfig.autoTitle;
     }
   }
 
@@ -146,6 +159,9 @@ class _FKWebViewState extends State<FKWebView>
                     onWebViewCreated: (InAppWebViewController controller) {
                       _webViewController = controller;
                       print("FKWebView: onWebViewCreated");
+                      if (widget.onWebViewCreated != null) {
+                        widget.onWebViewCreated(_webViewController);
+                      }
                       _addJavaScriptHandler();
                     },
                     onLoadStart: (InAppWebViewController controller, String url) {
@@ -181,7 +197,7 @@ class _FKWebViewState extends State<FKWebView>
                     },
                     onTitleChanged: (InAppWebViewController controller, String title) async {
                       print('FKWebView: 当前标题为: $title');
-                      if (_fkWebViewConfig.autoTitle) {
+                      if (_autoTitle) {
                         _title.value = title;
                       }
                       _showCloseButton.value = await controller.canGoBack();
@@ -226,7 +242,7 @@ class _FKWebViewState extends State<FKWebView>
                                     height: 25,
                                   ),
                                   Text(
-                                    _fkWebViewConfig.errorLangDelegate.errorTitle,
+                                    _fkWebViewConfig?.errorLang?.errorTitle ?? '',
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   SizedBox(
@@ -242,7 +258,7 @@ class _FKWebViewState extends State<FKWebView>
                                   // ),
                                   Opacity(
                                     opacity: isHttpError ? 1 : 0,
-                                    child: Text(_fkWebViewConfig.errorLangDelegate.reloadButtonTitle),
+                                    child: Text(_fkWebViewConfig?.errorLang?.reloadButtonTitle ?? ''),
                                   )
                                 ],
                               ),
@@ -301,7 +317,7 @@ class _FKWebViewState extends State<FKWebView>
                               valueListenable: _title,
                               builder: (BuildContext context, String title, Widget child) {
                                 return Text(title,
-                                    overflow: TextOverflow.fade, style: TextStyle(color: Colors.black87));
+                                    overflow: TextOverflow.fade, style: TextStyle(color: Colors.black87, fontSize: 18));
                               },
                             ),
                       leadingWidth: 80,
@@ -397,8 +413,8 @@ class _FKWebViewState extends State<FKWebView>
 
   @override
   void setAutoTitle(bool auto) {
-    if (_fkWebViewConfig != null && _fkWebViewConfig?.autoTitle != !auto) {
-      _fkWebViewConfig.autoTitle = !auto;
+    if (_autoTitle != !auto) {
+      _autoTitle = !auto;
     }
   }
 

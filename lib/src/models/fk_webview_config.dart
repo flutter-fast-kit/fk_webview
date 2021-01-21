@@ -3,7 +3,7 @@ import 'package:fk_webview/src/handler/javascript_handler_interceptor.dart';
 import 'fk_webview_error.dart';
 
 class FKWebViewConfig {
-  FKWebViewConfig(
+  const FKWebViewConfig(
       {this.title,
       this.autoTitle = true,
       this.showNavBarItem = true,
@@ -13,18 +13,20 @@ class FKWebViewConfig {
       this.customJavaScriptHandler,
       this.javaScriptHandlerInterceptor});
 
-  String title;
-  bool autoTitle;
-  bool showNavBarItem;
-  bool immersive;
+  final String title;
+  final bool autoTitle;
+  final bool showNavBarItem;
+  final bool immersive;
 
-  Map<String, dynamic> initialHeaders = {};
+  final Map<String, dynamic> initialHeaders;
 
-  FKWebViewErrorLangDelegate errorLangDelegate = DefaultFKWebViewErrorLangDelegate();
+  final FKWebViewErrorLangDelegate errorLangDelegate;
 
   /// 自定义 JavaScript 处理器
-  List<JavaScriptHandler> customJavaScriptHandler;
-  JavaScriptHandlerInterceptor javaScriptHandlerInterceptor;
+  final List<JavaScriptHandler> customJavaScriptHandler;
+  final JavaScriptHandlerInterceptor javaScriptHandlerInterceptor;
+
+  FKWebViewErrorLangDelegate get errorLang => errorLangDelegate ?? DefaultFKWebViewErrorLangDelegate();
 
   /// 通过URL参数进行解析
   ///

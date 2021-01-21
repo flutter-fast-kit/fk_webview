@@ -124,3 +124,8 @@ FKWebView(
 #### FKWebViewConfig
 
 ...
+
+
+## Changelog
+
+Refer to the [Changelog](CHANGELOG.md) to get all release notes.
