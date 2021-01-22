@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: FKWebView(
-        initialUrl: 'http://192.168.1.111:9981/',
+        initialUrl: 'https://baijiahao.baidu.com/s?id=1689552970188643352&wfr=spider&for=pc&title=',
         config: FKWebViewConfig(
             customJavaScriptHandler: [JavaScriptHandler('scanQRCode')],
             javaScriptHandlerInterceptor: BizJavaScriptHandlerInterceptor()),

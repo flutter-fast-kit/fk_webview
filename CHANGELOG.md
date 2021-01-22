@@ -1,3 +1,7 @@
+## [1.1.1] - v1.1.1
+
+* 处理网络出错情况
+
 ## [1.1.0] - v1.1.0
 
 * 增加 `onWebViewCreated` 回调, 从而获得 `InAppWebViewController`

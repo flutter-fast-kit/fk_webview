@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:fk_action_sheet/fk_action_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview_fork/flutter_inappwebview_fork.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -191,6 +193,7 @@ class _FKWebViewState extends State<FKWebView>
                       //   this.url = url;
                       // });
                       presenter.onWebViewReday();
+                      _onWebViewError.value = null;
                     },
                     onProgressChanged: (InAppWebViewController controller, int progress) {
                       _progress.value = progress / 100;
@@ -208,11 +211,15 @@ class _FKWebViewState extends State<FKWebView>
                     onLoadError: (InAppWebViewController controller, String url, int code, String message) {
                       print('FKWebView: 加载错误: $code , $message');
                       _onWebViewError.value = FKWebViewError(url, code, message);
+                      _progress.value = 0;
+                      _title.value = 'error';
                     },
                     onLoadHttpError:
                         (InAppWebViewController controller, String url, int statusCode, String description) {
                       print('FKWebView: http加载错误: $statusCode , $description');
                       _onWebViewError.value = FKWebViewError(url, statusCode, description);
+                      _progress.value = 0;
+                      _title.value = 'error';
                     },
                   ),
                 ),
@@ -228,14 +235,16 @@ class _FKWebViewState extends State<FKWebView>
                       ? Center(
                           child: GestureDetector(
                             child: Container(
+                              color: Colors.white,
+                              width: double.infinity,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   SizedBox(
                                     height: MediaQuery.of(context).size.height / 4,
                                   ),
-                                  Image.asset(
-                                    "assets/images/error.png",
+                                  Image(
+                                    image: AssetImage('assets/images/network-error.png', package: 'fk_webview'),
                                     width: 120,
                                   ),
                                   SizedBox(
@@ -371,8 +380,28 @@ class _FKWebViewState extends State<FKWebView>
                                           Icons.more_horiz_sharp,
                                           color: Colors.black,
                                         ),
-                                        onPressed: () {
-                                          _webViewController.reload();
+                                        onPressed: () async {
+                                          String currentUrl = await _webViewController.getUrl();
+                                          Uri uri = Uri.tryParse(currentUrl);
+                                          showActionSheet(
+                                              context: context,
+                                              topActionItem: TopActionItem(desc: uri.host),
+                                              actions: <ActionItem>[
+                                                ActionItem(
+                                                    title: "复制链接",
+                                                    onPressed: () async {
+                                                      Clipboard.setData(ClipboardData(text: currentUrl));
+                                                      Navigator.pop(context);
+                                                    }),
+                                                ActionItem(
+                                                    title: "刷新",
+                                                    onPressed: () async {
+                                                      _onWebViewError.value = null;
+                                                      await _webViewController.reload();
+                                                      Navigator.pop(context);
+                                                    }),
+                                              ],
+                                              bottomActionItem: BottomActionItem(title: "取消"));
                                         });
                                   }
                                   return SizedBox();

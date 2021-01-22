@@ -1,6 +1,6 @@
 name: fk_webview
 description: A new Flutter WebView package.
-version: 1.1.0
+version: 1.1.1
 homepage: http://github.com/flutter-fast-kit/fk_webview
 
 environment:
@@ -14,6 +14,7 @@ dependencies:
   rx_event_bus: ^1.0.0+2
   url_launcher: ^5.7.10
   connectivity: ^2.0.2
+  fk_action_sheet: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -24,10 +25,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
+  uses-material-design: true
   # To add assets to your package, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/images/
   #   - images/a_dot_ham.jpeg
   #
   # For details regarding assets in packages, see
