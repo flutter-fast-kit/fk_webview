@@ -4,8 +4,6 @@ import 'dart:io';
 import 'package:fk_webview/fk_webview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sgpexchange/pages/main/handler/biz_javascript_handler.dart';
-import 'package:sgpexchange/widgets/my_app_bar.dart';
 
 /// 支持的JSHandle列表
 const _bizHandlers = [
@@ -87,9 +85,9 @@ class _FWebViewPageState extends State<FWebViewPage> {
                         javaScriptHandlerInterceptor: BizJavaScriptHandlerInterceptor(context)),
                   ));
             } else if (snapshot.hasError) {
-              return const Scaffold(
-                appBar: MyAppBar(
-                  centerTitle: '错误',
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text('错误'),
                 ),
                 body: Center(
                   child: Text(
@@ -122,26 +120,9 @@ class BizJavaScriptHandlerInterceptor implements JavaScriptHandlerInterceptor {
   @override
   Future<JavaScriptHandlerResult> handler(JavaScriptHandler handler, List<dynamic> args) async {
     switch (handler.name) {
-      case 'scanQRCode':
-        return ScanQRCodeHandler(context).handle(args);
-        break;
-      case 'getUserInfo':
-        return GetUserInfoHandler().handle(args);
-        break;
-      case 'chooseImage':
-        return ChooseImageHandler(context).handle(args);
-        break;
-      case 'previewImage':
-        return PreviewImageHandler(context).handle(args);
-        break;
-      case 'saveToAlbum':
-        return SaveToAlbumHandler().handle(args);
-        break;
-      case 'toNative':
-        return ToNativeHandler(context).handle(args);
-        break;
       case 'closeWindow':
-        return CloseWindowHandler(context).handle(args);
+        Navigator.pop(context);
+        return JavaScriptHandlerResult();
         break;
       default:
         return null;

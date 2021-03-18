@@ -312,7 +312,7 @@ class _FKWebViewState extends State<FKWebView>
             child: ValueListenableBuilder<bool>(
                 valueListenable: _immersive,
                 builder: (BuildContext context, bool immersive, Widget child) {
-                  return AppBar(
+                  final appBar = AppBar(
                       brightness: Brightness.light,
                       backgroundColor: Colors.transparent,
                       shadowColor: Colors.black,
@@ -408,6 +408,15 @@ class _FKWebViewState extends State<FKWebView>
                                 },
                               )
                             ]);
+                  if (immersive) {
+                    return Listener(
+                      behavior: HitTestBehavior.translucent,
+                      child: IgnorePointer(
+                        child: appBar,
+                      ),
+                    );
+                  }
+                  return appBar;
                 }),
             preferredSize: Size.fromHeight(kToolbarHeight),
           ),
