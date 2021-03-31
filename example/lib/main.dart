@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
 
 class BizJavaScriptHandlerInterceptor implements JavaScriptHandlerInterceptor {
   @override
-  Future<JavaScriptHandlerResult> handler(JavaScriptHandler handler, List<dynamic> args) async {
+  Future<JavaScriptHandlerResult?> handler(JavaScriptHandler handler, List<dynamic> args) async {
     if (handler.name == 'scanQRCode') {
       return JavaScriptHandlerResult(data: 'ok!');
     }
@@ -33,7 +33,7 @@ class BizJavaScriptHandlerInterceptor implements JavaScriptHandlerInterceptor {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
-            RaisedButton(
+            ElevatedButton(
               child: Text('打开网页'),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(

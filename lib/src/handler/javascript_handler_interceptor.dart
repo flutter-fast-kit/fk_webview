@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 abstract class JavaScriptHandlerInterceptor {
-  Future<JavaScriptHandlerResult> handler(JavaScriptHandler handler, List<dynamic> args);
+  Future<JavaScriptHandlerResult?> handler(JavaScriptHandler handler, List<dynamic> args);
 }
 
 @immutable

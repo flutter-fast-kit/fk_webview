@@ -27,7 +27,7 @@ class FWebViewPage extends StatefulWidget {
   final URL_TYPE urlType;
   final Future<String> Function(BuildContext context) urlBuilder;
 
-  final String title;
+  final String? title;
   final bool autoTitle;
   final bool showNavBarItem;
   final bool immersive;
@@ -35,7 +35,7 @@ class FWebViewPage extends StatefulWidget {
 
   const FWebViewPage(
       {this.urlType = URL_TYPE.URL,
-      this.urlBuilder,
+      required this.urlBuilder,
       this.title,
       this.autoTitle = true,
       this.showNavBarItem = true,
@@ -52,7 +52,7 @@ class _FWebViewPageState extends State<FWebViewPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) async {
       Future.delayed(Duration.zero, () async {
         try {
           final String url = await widget.urlBuilder(context);
@@ -118,7 +118,7 @@ class BizJavaScriptHandlerInterceptor implements JavaScriptHandlerInterceptor {
   BizJavaScriptHandlerInterceptor(this.context);
 
   @override
-  Future<JavaScriptHandlerResult> handler(JavaScriptHandler handler, List<dynamic> args) async {
+  Future<JavaScriptHandlerResult?> handler(JavaScriptHandler handler, List<dynamic> args) async {
     switch (handler.name) {
       case 'closeWindow':
         Navigator.pop(context);
