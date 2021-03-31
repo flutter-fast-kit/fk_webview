@@ -104,7 +104,7 @@ dependencies:
 </provider>
 ```
 
-更多其他的配置, 请参考 [flutter_inappwebview](https://github.com/pichillilorenzo/flutter_inappwebview/blob/master/README.md)
+更多其他的配置, 请参考 [flutter_inappwebview](https://inappwebview.dev/)
 
 🔨 使用
 
