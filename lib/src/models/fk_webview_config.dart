@@ -13,18 +13,18 @@ class FKWebViewConfig {
       this.customJavaScriptHandler,
       this.javaScriptHandlerInterceptor});
 
-  final String title;
+  final String? title;
   final bool autoTitle;
   final bool showNavBarItem;
   final bool immersive;
 
-  final Map<String, dynamic> initialHeaders;
+  final Map<String, String>? initialHeaders;
 
-  final FKWebViewErrorLangDelegate errorLangDelegate;
+  final FKWebViewErrorLangDelegate? errorLangDelegate;
 
   /// 自定义 JavaScript 处理器
-  final List<JavaScriptHandler> customJavaScriptHandler;
-  final JavaScriptHandlerInterceptor javaScriptHandlerInterceptor;
+  final List<JavaScriptHandler>? customJavaScriptHandler;
+  final JavaScriptHandlerInterceptor? javaScriptHandlerInterceptor;
 
   FKWebViewErrorLangDelegate get errorLang => errorLangDelegate ?? DefaultFKWebViewErrorLangDelegate();
 
@@ -32,8 +32,8 @@ class FKWebViewConfig {
   ///
   /// [url] URL
   factory FKWebViewConfig.parse(String url) {
-    Uri uri = Uri.tryParse(url);
-    if (uri != null && uri.queryParameters != null) {
+    Uri? uri = Uri.tryParse(url);
+    if (uri != null) {
       Map<String, String> queryParams = uri.queryParameters;
       return FKWebViewConfig(
           title: queryParams['title'],

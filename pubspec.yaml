@@ -1,20 +1,20 @@
 name: fk_webview
 description: A new Flutter WebView package.
-version: 1.1.2
+version: 2.0.0
 homepage: http://github.com/flutter-fast-kit/fk_webview
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=2.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview_fork: ^7.0.0
-  rx_event_bus: ^1.0.0+2
-  url_launcher: ^5.7.10
-  connectivity: ^2.0.2
-  fk_action_sheet: ^1.0.0
+  flutter_inappwebview: ^5.3.0
+  rx_event_bus: ^2.0.1
+  url_launcher: ^6.0.3
+  connectivity: ^3.0.3
+  fk_action_sheet: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -38,7 +38,7 @@ extension ConnectivityResultExtension on ConnectivityResult {
 class GetClipboardHandler implements JavaScriptHandlerBase {
   @override
   Future<JavaScriptHandlerResult> handle(List<dynamic> args) async {
-    ClipboardData clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
+    ClipboardData? clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
     return JavaScriptHandlerResult(data: clipboardData?.text);
   }
 }

@@ -5,7 +5,7 @@ import 'package:fk_action_sheet/fk_action_sheet.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_inappwebview_fork/flutter_inappwebview_fork.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'handler/javascript_handler_manager.dart';
@@ -16,13 +16,13 @@ import 'mvp/webview_iview.dart';
 import 'mvp/webview_presenter.dart';
 
 class FKWebView extends StatefulWidget {
-  final String initialUrl;
-  final String initialData;
-  final String initialFile;
+  final String? initialUrl;
+  final String? initialData;
+  final String? initialFile;
 
-  final FKWebViewConfig config;
+  final FKWebViewConfig? config;
 
-  final void Function(InAppWebViewController controller) onWebViewCreated;
+  final void Function(InAppWebViewController controller)? onWebViewCreated;
 
   const FKWebView(
       {this.initialUrl,
@@ -38,13 +38,13 @@ class FKWebView extends StatefulWidget {
 class _FKWebViewState extends State<FKWebView>
     with SingleTickerProviderStateMixin, BasePageMixin<FKWebView, WebViewPresenter>
     implements WebViewIMvpView {
-  InAppWebViewController _webViewController;
+  InAppWebViewController? _webViewController;
 
   // ContextMenu contextMenu;
 
-  FKWebViewConfig _fkWebViewConfig;
+  late FKWebViewConfig _fkWebViewConfig;
 
-  CookieManager _cookieManager = CookieManager.instance();
+  // CookieManager _cookieManager = CookieManager.instance();
 
   /// 网页标题
   ValueNotifier<String> _title = ValueNotifier<String>('');
@@ -65,7 +65,7 @@ class _FKWebViewState extends State<FKWebView>
   ValueNotifier<bool> _showCloseButton = ValueNotifier<bool>(false);
 
   /// onError
-  ValueNotifier<FKWebViewError> _onWebViewError = ValueNotifier<FKWebViewError>(null);
+  ValueNotifier<FKWebViewError> _onWebViewError = ValueNotifier<FKWebViewError>(FKWebViewError.noError());
 
   bool _autoTitle = true;
 
@@ -73,13 +73,13 @@ class _FKWebViewState extends State<FKWebView>
   void initState() {
     super.initState();
     if (widget.config != null) {
-      _fkWebViewConfig = widget.config;
+      _fkWebViewConfig = widget.config!;
     } else {
       _fkWebViewConfig = FKWebViewConfig();
     }
 
-    if (_fkWebViewConfig.title != null && _fkWebViewConfig.title.isNotEmpty) {
-      _title.value = _fkWebViewConfig.title;
+    if (_fkWebViewConfig.title != null && _fkWebViewConfig.title!.isNotEmpty) {
+      _title.value = _fkWebViewConfig.title!;
     }
 
     if (_fkWebViewConfig.immersive != _immersive.value) {
@@ -110,13 +110,13 @@ class _FKWebViewState extends State<FKWebView>
   /// 注册 JavaScriptHandler
   void _addJavaScriptHandler() {
     JavaScriptHandlerManager.registerHandlers(
-        _webViewController, widget.config?.javaScriptHandlerInterceptor, widget.config?.customJavaScriptHandler);
+        _webViewController!, widget.config?.javaScriptHandlerInterceptor, widget.config?.customJavaScriptHandler);
   }
 
   Widget _buildBody() {
     return ValueListenableBuilder<bool>(
         valueListenable: _showNavBarItem,
-        builder: (BuildContext context, bool showNavigator, Widget child) {
+        builder: (BuildContext context, bool showNavigator, Widget? child) {
           return SafeArea(
               top: showNavigator,
               child: Padding(
@@ -134,23 +134,21 @@ class _FKWebViewState extends State<FKWebView>
                     /// 加载链接
                     // initialUrl:
                     //     "https://customer.aitdcoin.com/help/index.html?v=v3&name=16716582401&mobile=16716582401&email=&trueName=&userSn=975181&userId=c6a474edbc2946159047f5e4ef8a071d&isAuth=1&language=en_US&resion=app_home&belong=2&size=375.0x667.0&device=2&appname=sgp&appid=0p55p1&deviceversion=11.4.1&phonemodel=iPhone&appversion=3.0.0",
-                    initialUrl: widget.initialUrl ?? '',
+                    initialUrlRequest: widget.initialUrl != null
+                        ? URLRequest(url: Uri.parse(widget.initialUrl!), headers: _fkWebViewConfig.initialHeaders)
+                        : null,
 
                     /// 加载html代码
-                    initialData: widget.initialData != null ? InAppWebViewInitialData(data: widget.initialData) : null,
+                    initialData: widget.initialData != null ? InAppWebViewInitialData(data: widget.initialData!) : null,
                     // InAppWebViewInitialData(data: 'null'),
 
                     /// 加载本地文件, 需要在 pubspec.yaml 里加入 assets
                     initialFile: widget.initialFile,
                     // "assets/index.html",
 
-                    /// 初始化头部信息 eg: {"token": "token"}
-                    initialHeaders: _fkWebViewConfig.initialHeaders ?? {},
-
                     /// webView 初始化配置
                     initialOptions: InAppWebViewGroupOptions(
                         crossPlatform: InAppWebViewOptions(
-                          debuggingEnabled: kDebugMode,
                           clearCache: kDebugMode,
                           useShouldOverrideUrlLoading: true,
 
@@ -162,62 +160,61 @@ class _FKWebViewState extends State<FKWebView>
                       _webViewController = controller;
                       print("FKWebView: onWebViewCreated");
                       if (widget.onWebViewCreated != null) {
-                        widget.onWebViewCreated(_webViewController);
+                        widget.onWebViewCreated!(_webViewController!);
                       }
                       _addJavaScriptHandler();
                     },
-                    onLoadStart: (InAppWebViewController controller, String url) {
-                      print("FKWebView: onLoadStart $url");
+                    onLoadStart: (InAppWebViewController controller, Uri? url) {
+                      print("FKWebView: onLoadStart ${url.toString()}");
                       _progress.value = 5 / 100;
                     },
                     shouldOverrideUrlLoading: (controller, shouldOverrideUrlLoadingRequest) async {
-                      var url = shouldOverrideUrlLoadingRequest.url;
-                      var uri = Uri.parse(url);
+                      Uri? uri = shouldOverrideUrlLoadingRequest.request.url;
 
-                      if (!["http", "https", "file", "chrome", "data", "javascript", "about"].contains(uri.scheme)) {
-                        if (await canLaunch(url)) {
+                      if (!["http", "https", "file", "chrome", "data", "javascript", "about"].contains(uri?.scheme)) {
+                        if (await canLaunch(uri.toString())) {
                           // Launch the App
                           await launch(
-                            url,
+                            uri.toString(),
                           );
                           // and cancel the request
-                          return ShouldOverrideUrlLoadingAction.CANCEL;
+                          return NavigationActionPolicy.CANCEL;
                         }
                       }
 
-                      return ShouldOverrideUrlLoadingAction.ALLOW;
+                      return NavigationActionPolicy.ALLOW;
                     },
-                    onLoadStop: (InAppWebViewController controller, String url) async {
-                      print("FKWebView: onLoadStop $url");
+                    onLoadStop: (InAppWebViewController controller, Uri? uri) async {
+                      print("FKWebView: onLoadStop $uri");
                       // setState(() {
                       //   this.url = url;
                       // });
-                      presenter.onWebViewReday();
-                      _onWebViewError.value = null;
+                      presenter?.onWebViewReday();
+                      _onWebViewError.value = FKWebViewError(code: -10000);
                     },
                     onProgressChanged: (InAppWebViewController controller, int progress) {
                       _progress.value = progress / 100;
                     },
-                    onTitleChanged: (InAppWebViewController controller, String title) async {
+                    onTitleChanged: (InAppWebViewController controller, String? title) async {
                       print('FKWebView: 当前标题为: $title');
                       if (_autoTitle) {
-                        _title.value = title;
+                        _title.value = title ?? '';
                       }
                       _showCloseButton.value = await controller.canGoBack();
                     },
                     onConsoleMessage: (controller, consoleMessage) {
                       print('JS Console: $consoleMessage}');
                     },
-                    onLoadError: (InAppWebViewController controller, String url, int code, String message) {
+                    onLoadError: (InAppWebViewController controller, Uri? uri, int code, String message) {
                       print('FKWebView: 加载错误: $code , $message');
-                      _onWebViewError.value = FKWebViewError(url, code, message);
+                      _onWebViewError.value = FKWebViewError(url: uri.toString(), code: code, message: message);
                       _progress.value = 0;
                       _title.value = 'error';
                     },
-                    onLoadHttpError:
-                        (InAppWebViewController controller, String url, int statusCode, String description) {
+                    onLoadHttpError: (InAppWebViewController controller, Uri? uri, int statusCode, String description) {
                       print('FKWebView: http加载错误: $statusCode , $description');
-                      _onWebViewError.value = FKWebViewError(url, statusCode, description);
+                      _onWebViewError.value =
+                          FKWebViewError(url: uri.toString(), code: statusCode, message: description);
                       _progress.value = 0;
                       _title.value = 'error';
                     },
@@ -229,9 +226,9 @@ class _FKWebViewState extends State<FKWebView>
             /// 错误页面
             ValueListenableBuilder<FKWebViewError>(
                 valueListenable: _onWebViewError,
-                builder: (BuildContext context, FKWebViewError error, Widget child) {
-                  bool isHttpError = error != null ? (error.code >= 100 && error.code <= 600) : false;
-                  return error != null
+                builder: (BuildContext context, FKWebViewError error, Widget? child) {
+                  bool isHttpError = (error.code >= 100 && error.code <= 600);
+                  return error.code != FKWebViewError.noError().code
                       ? Center(
                           child: GestureDetector(
                             child: Container(
@@ -251,7 +248,7 @@ class _FKWebViewState extends State<FKWebView>
                                     height: 25,
                                   ),
                                   Text(
-                                    _fkWebViewConfig?.errorLang?.errorTitle ?? '',
+                                    _fkWebViewConfig.errorLang.errorTitle,
                                     style: TextStyle(fontSize: 16),
                                   ),
                                   SizedBox(
@@ -267,15 +264,15 @@ class _FKWebViewState extends State<FKWebView>
                                   // ),
                                   Opacity(
                                     opacity: isHttpError ? 1 : 0,
-                                    child: Text(_fkWebViewConfig?.errorLang?.reloadButtonTitle ?? ''),
+                                    child: Text(_fkWebViewConfig.errorLang.reloadButtonTitle),
                                   )
                                 ],
                               ),
                             ),
                             onTap: () async {
                               if (isHttpError) {
-                                _onWebViewError.value = null;
-                                await _webViewController.reload();
+                                _onWebViewError.value = FKWebViewError.noError();
+                                await _webViewController?.reload();
                               }
                             },
                           ),
@@ -286,7 +283,7 @@ class _FKWebViewState extends State<FKWebView>
             /// webView 进度条
             ValueListenableBuilder<double>(
                 valueListenable: _progress,
-                builder: (BuildContext context, double progress, Widget child) {
+                builder: (BuildContext context, double progress, Widget? child) {
                   return AnimatedOpacity(
                     opacity: progress < 1 ? 1 : 0,
                     duration: Duration(milliseconds: 100),
@@ -311,7 +308,7 @@ class _FKWebViewState extends State<FKWebView>
           appBar: PreferredSize(
             child: ValueListenableBuilder<bool>(
                 valueListenable: _immersive,
-                builder: (BuildContext context, bool immersive, Widget child) {
+                builder: (BuildContext context, bool immersive, Widget? child) {
                   final appBar = AppBar(
                       brightness: Brightness.light,
                       backgroundColor: Colors.transparent,
@@ -324,7 +321,7 @@ class _FKWebViewState extends State<FKWebView>
                           ? SizedBox()
                           : ValueListenableBuilder<String>(
                               valueListenable: _title,
-                              builder: (BuildContext context, String title, Widget child) {
+                              builder: (BuildContext context, String title, Widget? child) {
                                 return Text(title,
                                     overflow: TextOverflow.fade, style: TextStyle(color: Colors.black87, fontSize: 18));
                               },
@@ -341,8 +338,8 @@ class _FKWebViewState extends State<FKWebView>
                                     ),
                                     onPressed: () async {
                                       if (_webViewController != null) {
-                                        if (await _webViewController.canGoBack()) {
-                                          _webViewController.goBack();
+                                        if (await _webViewController!.canGoBack()) {
+                                          _webViewController!.goBack();
                                         } else {
                                           Navigator.pop(context);
                                         }
@@ -350,7 +347,7 @@ class _FKWebViewState extends State<FKWebView>
                                     }),
                                 ValueListenableBuilder<bool>(
                                     valueListenable: _showCloseButton,
-                                    builder: (BuildContext context, bool showBottomBar, Widget child) {
+                                    builder: (BuildContext context, bool showBottomBar, Widget? child) {
                                       return showBottomBar
                                           ? InkWell(
                                               child: Padding(
@@ -373,7 +370,7 @@ class _FKWebViewState extends State<FKWebView>
                           : [
                               ValueListenableBuilder<bool>(
                                 valueListenable: _showActionItem,
-                                builder: (BuildContext context, bool showItem, Widget child) {
+                                builder: (BuildContext context, bool showItem, Widget? child) {
                                   if (showItem) {
                                     return IconButton(
                                         icon: Icon(
@@ -381,23 +378,22 @@ class _FKWebViewState extends State<FKWebView>
                                           color: Colors.black,
                                         ),
                                         onPressed: () async {
-                                          String currentUrl = await _webViewController.getUrl();
-                                          Uri uri = Uri.tryParse(currentUrl);
+                                          Uri? currentUrl = await _webViewController?.getUrl();
                                           showActionSheet(
                                               context: context,
-                                              topActionItem: TopActionItem(desc: uri.host),
+                                              topActionItem: TopActionItem(title: '请选择操作', desc: currentUrl?.host),
                                               actions: <ActionItem>[
                                                 ActionItem(
                                                     title: "复制链接",
                                                     onPressed: () async {
-                                                      Clipboard.setData(ClipboardData(text: currentUrl));
+                                                      Clipboard.setData(ClipboardData(text: currentUrl.toString()));
                                                       Navigator.pop(context);
                                                     }),
                                                 ActionItem(
                                                     title: "刷新",
                                                     onPressed: () async {
-                                                      _onWebViewError.value = null;
-                                                      await _webViewController.reload();
+                                                      _onWebViewError.value = FKWebViewError.noError();
+                                                      await _webViewController?.reload();
                                                       Navigator.pop(context);
                                                     }),
                                               ],
@@ -425,8 +421,8 @@ class _FKWebViewState extends State<FKWebView>
                   child: _buildBody(),
                   onWillPop: () async {
                     if (_webViewController != null) {
-                      if (await _webViewController.canGoBack()) {
-                        _webViewController.goBack();
+                      if (await _webViewController!.canGoBack()) {
+                        _webViewController!.goBack();
                         return false;
                       }
                     }
@@ -440,7 +436,7 @@ class _FKWebViewState extends State<FKWebView>
   WebViewPresenter createPresenter() => WebViewPresenter();
 
   @override
-  InAppWebViewController get webViewController => _webViewController;
+  InAppWebViewController get webViewController => _webViewController!;
 
   @override
   void hideNav(bool hide) {

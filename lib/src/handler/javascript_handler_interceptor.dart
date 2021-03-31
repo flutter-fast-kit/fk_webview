@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-class JavaScriptHandlerInterceptor {
-  Future<JavaScriptHandlerResult> handler(JavaScriptHandler handler, List<dynamic> args) {
-    return null;
-  }
+abstract class JavaScriptHandlerInterceptor {
+  Future<JavaScriptHandlerResult> handler(JavaScriptHandler handler, List<dynamic> args);
 }
 
 @immutable
@@ -16,7 +14,7 @@ class JavaScriptHandler {
 @immutable
 class JavaScriptHandlerResult {
   final bool success;
-  final String message;
+  final String? message;
   final dynamic data;
 
   const JavaScriptHandlerResult({this.success = true, this.message, this.data});

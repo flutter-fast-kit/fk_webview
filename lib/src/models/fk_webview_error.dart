@@ -2,16 +2,21 @@ import 'package:flutter/foundation.dart';
 
 @immutable
 class FKWebViewError {
-  final String url;
+  final String? url;
   final int code;
-  final String message;
+  final String? message;
 
-  const FKWebViewError(this.url, this.code, this.message);
+  const FKWebViewError({this.url, required this.code, this.message});
+
+  /// 空异常
+  factory FKWebViewError.noError() {
+    return FKWebViewError(code: -999999999);
+  }
 }
 
 abstract class FKWebViewErrorLangDelegate {
-  String errorTitle;
-  String reloadButtonTitle;
+  late String errorTitle;
+  late String reloadButtonTitle;
 }
 
 class DefaultFKWebViewErrorLangDelegate implements FKWebViewErrorLangDelegate {

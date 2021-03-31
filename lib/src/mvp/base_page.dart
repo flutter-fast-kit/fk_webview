@@ -4,7 +4,7 @@ import 'base_presenter.dart';
 import 'mvps.dart';
 
 mixin BasePageMixin<T extends StatefulWidget, P extends BasePresenter> on State<T> implements IMvpView {
-  P presenter;
+  P? presenter;
 
   P createPresenter();
 
@@ -45,7 +45,7 @@ mixin BasePageMixin<T extends StatefulWidget, P extends BasePresenter> on State<
     super.initState();
 
     /// 添加 firstLayout 生命周期回调
-    WidgetsBinding.instance.addPostFrameCallback((_) => afterFirstLayout(context));
+    WidgetsBinding.instance?.addPostFrameCallback((_) => afterFirstLayout(context));
   }
 
   @mustCallSuper

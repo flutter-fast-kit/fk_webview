@@ -11,19 +11,19 @@ class WebViewPresenter extends BasePagePresenter<WebViewIMvpView> {
     eventBus.on<WebViewUIEvent>().listen((event) {
       switch (event.name) {
         case 'setOptionMenu':
-          view.setOptionMenu(event.data);
+          view?.setOptionMenu(event.data);
           break;
         case 'setTitle':
-          view.setTitle(event.data);
+          view?.setTitle(event.data);
           break;
         case 'setAutoTitle':
-          view.setAutoTitle(event.data);
+          view?.setAutoTitle(event.data);
           break;
         case 'setImmersive':
-          view.setImmersive(event.data);
+          view?.setImmersive(event.data);
           break;
         case 'hideNav':
-          view.hideNav(event.data);
+          view?.hideNav(event.data);
           break;
         case 'closeWindow':
           _closeWindow();
@@ -36,12 +36,12 @@ class WebViewPresenter extends BasePagePresenter<WebViewIMvpView> {
 
   void onWebViewReday() async {
     String platformReadyJS = "window.dispatchEvent(new Event('FKWebViewReady'));";
-    await view.webViewController.evaluateJavascript(source: platformReadyJS);
+    await view?.webViewController.evaluateJavascript(source: platformReadyJS);
   }
 
   void onWebViewDispose() async {
     String platformReadyJS = "window.dispatchEvent(new Event('FKWebViewDispose'));";
-    await view.webViewController.evaluateJavascript(source: platformReadyJS);
+    await view?.webViewController.evaluateJavascript(source: platformReadyJS);
   }
 
   @override
@@ -56,6 +56,8 @@ class WebViewPresenter extends BasePagePresenter<WebViewIMvpView> {
   }
 
   void _closeWindow() {
-    Navigator.pop(view.getContext());
+    if (view != null) {
+      Navigator.pop(view!.getContext());
+    }
   }
 }

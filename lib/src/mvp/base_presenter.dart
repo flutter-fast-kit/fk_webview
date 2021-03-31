@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'mvps.dart';
 
 class BasePresenter<V extends IMvpView> extends IPresenter {
-  V view;
+  V? view;
 
   @mustCallSuper
   @override

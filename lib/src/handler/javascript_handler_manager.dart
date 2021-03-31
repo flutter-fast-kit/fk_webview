@@ -1,4 +1,4 @@
-import 'package:flutter_inappwebview_fork/flutter_inappwebview_fork.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'javascript_handler_dispatcher.dart';
 import 'javascript_handler_interceptor.dart';
@@ -47,12 +47,12 @@ class JavaScriptHandlerManager {
   static List<JavaScriptHandler> get supportApi => _supportApi;
   static List<JavaScriptHandler> _supportApi = [];
 
-  static JavaScriptHandlerInterceptor get handlerInterceptor => _handlerInterceptor;
-  static JavaScriptHandlerInterceptor _handlerInterceptor;
+  static JavaScriptHandlerInterceptor? get handlerInterceptor => _handlerInterceptor;
+  static JavaScriptHandlerInterceptor? _handlerInterceptor;
 
   /// 注册 Handlers
   static void registerHandlers(InAppWebViewController webViewController,
-      JavaScriptHandlerInterceptor customHandlerInterceptor, List<JavaScriptHandler> customHandlers) {
+      JavaScriptHandlerInterceptor? customHandlerInterceptor, List<JavaScriptHandler>? customHandlers) {
     _supportApi.addAll(_defaultJavascriptHandler);
     if (customHandlers != null) {
       _supportApi.addAll(customHandlers);

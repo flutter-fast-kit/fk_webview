@@ -1,4 +1,4 @@
-import 'package:flutter_inappwebview_fork/flutter_inappwebview_fork.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 import 'mvps.dart';
 

@@ -7,5 +7,5 @@ final eventBus = EventBus();
 class WebViewUIEvent {
   final String name;
   final dynamic data;
-  const WebViewUIEvent({this.name, this.data});
+  const WebViewUIEvent({required this.name, this.data});
 }
