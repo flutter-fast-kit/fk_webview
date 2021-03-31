@@ -123,10 +123,8 @@ class BizJavaScriptHandlerInterceptor implements JavaScriptHandlerInterceptor {
       case 'closeWindow':
         Navigator.pop(context);
         return JavaScriptHandlerResult();
-        break;
       default:
         return null;
-        break;
     }
   }
 }
