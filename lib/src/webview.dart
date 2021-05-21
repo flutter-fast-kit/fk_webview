@@ -190,7 +190,7 @@ class _FKWebViewState extends State<FKWebView>
                       //   this.url = url;
                       // });
                       presenter?.onWebViewReday();
-                      _onWebViewError.value = FKWebViewError(code: -10000);
+                      _onWebViewError.value = FKWebViewError(code: FKWebViewError.noError().code);
                     },
                     onProgressChanged: (InAppWebViewController controller, int progress) {
                       _progress.value = progress / 100;
