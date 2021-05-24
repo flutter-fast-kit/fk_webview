@@ -28,6 +28,9 @@ class WebViewPresenter extends BasePagePresenter<WebViewIMvpView> {
         case 'closeWindow':
           _closeWindow();
           break;
+        case 'refresh':
+          view?.refresh(event.data);
+          break;
         default:
           break;
       }

@@ -132,8 +132,6 @@ class _FKWebViewState extends State<FKWebView>
                   child: InAppWebView(
                     // contextMenu: contextMenu,
                     /// 加载链接
-                    // initialUrl:
-                    //     "https://customer.aitdcoin.com/help/index.html?v=v3&name=16716582401&mobile=16716582401&email=&trueName=&userSn=975181&userId=c6a474edbc2946159047f5e4ef8a071d&isAuth=1&language=en_US&resion=app_home&belong=2&size=375.0x667.0&device=2&appname=sgp&appid=0p55p1&deviceversion=11.4.1&phonemodel=iPhone&appversion=3.0.0",
                     initialUrlRequest: widget.initialUrl != null
                         ? URLRequest(url: Uri.parse(widget.initialUrl!), headers: _fkWebViewConfig.initialHeaders)
                         : null,
@@ -471,5 +469,13 @@ class _FKWebViewState extends State<FKWebView>
     if (_title.value != _title) {
       _title.value = title;
     }
+  }
+
+  @override
+  Future<void> refresh(bool resetCache) async {
+    if (resetCache) {
+      await _webViewController?.clearCache();
+    }
+    await _webViewController?.reload();
   }
 }

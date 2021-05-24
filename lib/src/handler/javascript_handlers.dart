@@ -70,12 +70,3 @@ class UrlSchemeOpenHandler implements JavaScriptHandlerBase {
     return JavaScriptHandlerResult();
   }
 }
-
-/// 打开系统浏览器
-class OpenDefaultBrowserHandler implements JavaScriptHandlerBase {
-  @override
-  Future<JavaScriptHandlerResult> handle(List<dynamic> args) async {
-    await launch(args[0], forceSafariVC: true);
-    return JavaScriptHandlerResult();
-  }
-}

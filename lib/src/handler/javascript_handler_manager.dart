@@ -40,7 +40,7 @@ class JavaScriptHandlerManager {
     // JavaScriptHandler('scanQRCode'), // scanQRCode(直接返回结果)
 
     /// 打开系统默认浏览器
-    JavaScriptHandler('openDefaultBrowser'), // 打开系统默认浏览器 - YES
+    JavaScriptHandler('openUrl'), // 打开系统默认浏览器 - YES
   ];
 
   /// 支持的所有Api

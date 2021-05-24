@@ -19,4 +19,8 @@ abstract class WebViewIMvpView implements IMvpView {
 
   /// 设置导航是否显示
   void hideNav(bool hide);
+
+  /// 刷新当前URL
+  /// resetCache: 是否清空缓存
+  Future<void> refresh(bool resetCache);
 }

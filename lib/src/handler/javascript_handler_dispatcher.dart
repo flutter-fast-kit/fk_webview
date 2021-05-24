@@ -51,9 +51,7 @@ class JavaScriptHandlerDispatcher {
       case 'urlSchemeOpen':
         _result = await UrlSchemeOpenHandler().handle(args);
         break;
-      case 'openDefaultBrowser':
-        _result = await OpenDefaultBrowserHandler().handle(args);
-        break;
+      case 'refresh':
       case 'setOptionMenu':
       case 'setTitle':
       case 'setAutoTitle':
