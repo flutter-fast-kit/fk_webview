@@ -1,3 +1,7 @@
+## [2.0.3]
+
+* fix: mixedContentMode: AndroidMixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW
+
 ## [2.0.2]
 
 * 添加 refresh api

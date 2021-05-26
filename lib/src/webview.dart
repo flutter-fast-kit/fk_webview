@@ -153,7 +153,9 @@ class _FKWebViewState extends State<FKWebView>
                           /// 禁用缩放
                           supportZoom: false,
                         ),
-                        android: AndroidInAppWebViewOptions(useHybridComposition: true)),
+                        android: AndroidInAppWebViewOptions(
+                            useHybridComposition: true,
+                            mixedContentMode: AndroidMixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW)),
                     onWebViewCreated: (InAppWebViewController controller) {
                       _webViewController = controller;
                       print("FKWebView: onWebViewCreated");
