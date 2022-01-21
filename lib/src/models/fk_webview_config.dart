@@ -7,6 +7,7 @@ class FKWebViewConfig {
       {this.title,
       this.autoTitle = true,
       this.showNavBarItem = true,
+      this.showActionItem = true,
       this.immersive = false,
       this.initialHeaders,
       this.errorLangDelegate,
@@ -16,6 +17,7 @@ class FKWebViewConfig {
   final String? title;
   final bool autoTitle;
   final bool showNavBarItem;
+  final bool showActionItem;
   final bool immersive;
 
   final Map<String, String>? initialHeaders;
@@ -38,6 +40,7 @@ class FKWebViewConfig {
       return FKWebViewConfig(
           title: queryParams['title'],
           showNavBarItem: _getSafeValue<bool>('showNav', queryParams, true),
+          showActionItem: _getSafeValue<bool>('showAction', queryParams, true),
           autoTitle: _getSafeValue<bool>('autoTitle', queryParams, true),
           immersive: _getSafeValue<bool>('immersive', queryParams, false));
     }

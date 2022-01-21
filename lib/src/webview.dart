@@ -90,6 +90,10 @@ class _FKWebViewState extends State<FKWebView>
       _showNavBarItem.value = _fkWebViewConfig.showNavBarItem;
     }
 
+    if (_fkWebViewConfig.showActionItem != _showActionItem.value) {
+      _showActionItem.value = _fkWebViewConfig.showActionItem;
+    }
+
     if (_fkWebViewConfig.autoTitle != _autoTitle) {
       _autoTitle = _fkWebViewConfig.autoTitle;
     }
@@ -400,7 +404,7 @@ class _FKWebViewState extends State<FKWebView>
                                               bottomActionItem: BottomActionItem(title: "取消"));
                                         });
                                   }
-                                  return SizedBox();
+                                  return SizedBox(width: 32);
                                 },
                               )
                             ]);
